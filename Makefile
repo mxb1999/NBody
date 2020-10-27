@@ -1,25 +1,44 @@
 GCC = gcc
-LIB =
+MDIR = bin
+BDIR = bruteForce/bin
+BSRC = bruteForce/src
 TREESRC = tree/src
-TREEINC = tree/include
-TREEFLAGS = -Wall -Werror -Og -g -std=c99 -I$(TREEINC)
+SIMINC = -Itree/include -Iinclude -IbruteForce/include
+TREEFLAGS = -Og -g -std=c99 $(SIMINC)
 TREEOBJ = tree/bin
+MAIN = src
+MDIR = bin
+_CTREE = tree.o  #Core C++ files being used
+CTREE = $(patsubst %,$(TREEOBJ)/%,$(_CTREE))
 
-_COBJ = test.o staticTree.o  #Core C++ files being used
-COBJ = $(patsubst %,$(TREEOBJ)/%,$(_COBJ))
+_CMAIN = test.o  #Core C++ files being used
+CMAIN = $(patsubst %,$(MDIR)/%,$(_CMAIN))
 
-$(TREEOBJ)/%.o:  $(TREESRC)/%.c#Compile instructions for individual C++ source files
+_CBRUTE = dynamics.o io.o  #Core C++ files being used
+CBRUTE = $(patsubst %,$(BDIR)/%,$(_CBRUTE))
+
+#_CMESH = test.o staticTree.o  #Core C++ files being used
+#CMESH = $(patsubst %,$(TREEOBJ)/%,$(_CMESH))
+
+$(TREEOBJ)/%.o:  $(TREESRC)/%.c #Compile instructions for individual C++ source files
 	$(GCC) $(TREEFLAGS) -c -o $@ $^
 
+$(BDIR)/%.o:  $(BSRC)/%.c #Compile instructions for individual C++ source files
+	$(GCC) $(TREEFLAGS) -c -o $@ $^
 
-treesim: $(COBJ)  #Program compile
+$(MDIR)/%.o:  $(MAIN)/%.c #Compile instructions for individual C++ source files
+	$(GCC) $(TREEFLAGS) -c -o $@ $^
+
+treesim: $(CTREE) $(CMAIN) $(CBRUTE) #Program compile
 	$(GCC) $(TREEFLAGS) -o $@ $^
 
 .phony: clean
 
 #removes all object and dependency files, must be run when a change is made to .h files
 clean:
-	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~
+	rm -f $(TREEOBJ)/*.o *~ core $(INCDIR)/*~
+	rm -f $(MDIR)m/*.o *~ core $(INCDIR)/*~
+	rm -f $(BDIR)/*.o *~ core $(INCDIR)/*~
 	rm -f $(ODIR)/*.d *~ core $(INCDIR)/*~
 
 .phony: reset
@@ -27,3 +46,9 @@ clean:
 reset:
 	make clean
 	make
+
+.phony: run
+
+run:
+	make
+	./treesim
