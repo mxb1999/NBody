@@ -1,9 +1,10 @@
 GCC = gcc
-MDIR = bin
-BDIR = bruteForce/bin
-BSRC = bruteForce/src
-TREESRC = tree/src
+MDIR = code/bin
+BDIR = code/bruteForce/bin
+BSRC = code/bruteForce/src
+TREESRC = code/tree/src
 SIMINC = -Itree/include -Iinclude -IbruteForce/include
+LIBS = -lm
 TREEFLAGS = -Og -g -std=c99 $(SIMINC)
 TREEOBJ = tree/bin
 MAIN = src
@@ -21,16 +22,16 @@ CBRUTE = $(patsubst %,$(BDIR)/%,$(_CBRUTE))
 #CMESH = $(patsubst %,$(TREEOBJ)/%,$(_CMESH))
 
 $(TREEOBJ)/%.o:  $(TREESRC)/%.c #Compile instructions for individual C++ source files
-	$(GCC) $(TREEFLAGS) -c -o $@ $^
+	$(GCC) $(TREEFLAGS) -c -o $@ $^ $(LIBS)
 
 $(BDIR)/%.o:  $(BSRC)/%.c #Compile instructions for individual C++ source files
-	$(GCC) $(TREEFLAGS) -c -o $@ $^
+	$(GCC) $(TREEFLAGS) -c -o $@ $^ $(LIBS)
 
 $(MDIR)/%.o:  $(MAIN)/%.c #Compile instructions for individual C++ source files
-	$(GCC) $(TREEFLAGS) -c -o $@ $^
+	$(GCC) $(TREEFLAGS) -c -o $@ $^ $(LIBS)
 
 treesim: $(CTREE) $(CMAIN) $(CBRUTE) #Program compile
-	$(GCC) $(TREEFLAGS) -o $@ $^
+	$(GCC) $(TREEFLAGS) -o $@ $^ $(LIBS)
 
 .phony: clean
 
