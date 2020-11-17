@@ -7,17 +7,7 @@
   //accept input as text file formatted w/ coordinates & velocities
   //Lack of COM abstraction -> 24 B per particle using floats
 
-  typedef struct
-  {
-    //position coordinates
-    float x;
-    float y;
-    //particle velocity
-    float vx;
-    float vy;
-    //mass of the particle
-    float mass;
-  } particle;
+
 
   extern char* fileIn;
   extern particle** sys;
